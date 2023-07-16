@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/21yuyu99/yeo_gi_da.git"
+    "url": "git+https://github.com/MinJae00/EcoTech_Backend.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/21yuyu99/yeo_gi_da/issues"
+    "url": "https://github.com/MinJae00/EcoTech_Backend/issues"
   },
-  "homepage": "https://github.com/21yuyu99/yeo_gi_da#readme",
+  "homepage": "https://github.com/MinJae00/EcoTech_Backend#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
