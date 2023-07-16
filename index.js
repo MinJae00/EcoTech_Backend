@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = 3030
+const port = 3036
 process.env.TZ = "Asia/Seoul"
 
 const cors = require('cors')

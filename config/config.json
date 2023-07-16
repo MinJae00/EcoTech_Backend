@@ -1,22 +1,22 @@
 {
   "development": {
-    "username": "api_conn_user",
-    "password": "q1w2e3r4",
-    "database": "YeoGiDa_DEV_DB",
-    "host": "139.150.83.29",
+    "username": "api_con_user",
+    "password": "Abcd1234!@!@!@",
+    "database": "EcoTech_DEV_DB",
+    "host": "211.169.248.236",
     "dialect": "mysql"
   },
   "test": {
-    "username": "api_conn_user",
-    "password": "q1w2e3r4",
-    "database": "YeoGiDa_TEST_DB",
-    "host": "139.150.83.29",
+    "username": "api_con_user",
+    "password": "Abcd1234!@!@!@",
+    "database": "EcoTech_TEST_DB",
+    "host": "211.169.248.236",
     "dialect": "mysql"
   },
   "production": {
     "username": "root",
-    "password": "WK86@bja^k~_",
-    "database": "YeoGiDa_DB",
+    "password": "Minjae0539!@!@!@!@!",
+    "database": "EcoTech_DB",
     "host": "127.0.0.1",
     "dialect": "mysql"
   }
