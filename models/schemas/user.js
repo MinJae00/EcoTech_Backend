@@ -3,11 +3,20 @@ var models = require('..');
 
 module.exports = ((sequelize, DataTypes) => {
 
-    var schema = sequelize.define('comment', {
-        content: {
+    var schema = sequelize.define('user', {
+        type: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+        },
+        provider:{
             type: Sequelize.TEXT,
             allowNull: false,
-        }
+        },
+        provider_id: {
+            type: Sequelize.TEXT,
+            allowNull: false,
+        },
+
     }, {
         timestamps: true,
         paranoid: true,
@@ -15,11 +24,5 @@ module.exports = ((sequelize, DataTypes) => {
         collate: 'utf8_unicode_ci',
     });
     
-    schema.associate = models => {
-        models.comment.belongsTo(models.board, {
-            foreignKey: 'board_id',
-            onDelete: "CASCADE",
-        })
-    };
     return schema;
 })

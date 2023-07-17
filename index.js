@@ -5,6 +5,16 @@ process.env.TZ = "Asia/Seoul"
 
 const cors = require('cors')
 
+// const passportConfig = require('./passport');
+
+// passportConfig(app);
+// const userRouter = require('./routes/user');
+
+// app.use('/auth', [userRouter]);
+///
+
+<a href="/users/kakao/start"></a>
+
 app.use(cors())
 
 app.use(express.json())
