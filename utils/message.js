@@ -1,5 +1,5 @@
 module.exports = {
-    "200_OK": { "status": 200, "message": "OK" },
+    "200_OK": { "status": 200, "message": "안녕하세요" },
     "400_BAD_REQUEST": { "status": 400, "message": "BAD_REQUEST" },
     "401_UNAUTHORIZED": { "status": 401, "message": "UNAUTHORIZED" },
     "401_EXPIRED_TOKEN": { "status": 401, "message": "EXPIRED_TOKEN" },
