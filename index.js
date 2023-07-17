@@ -13,7 +13,6 @@ const cors = require('cors')
 // app.use('/auth', [userRouter]);
 ///
 
-
 app.use(cors())
 
 app.use(express.json())
@@ -35,6 +34,9 @@ sequelize
     .then(() => console.log('connected database'))
     .catch(err => console.error('occurred error in database connecting', err))
 
+app.get('/', (req, res) => {
+    res.send('Hello, World!');
+    });
 app.listen(port, () => {
     console.log("listening on port " + port)
 })
