@@ -13,7 +13,6 @@ const cors = require('cors')
 // app.use('/auth', [userRouter]);
 ///
 
-<a href="/users/kakao/start"></a>
 
 app.use(cors())
 

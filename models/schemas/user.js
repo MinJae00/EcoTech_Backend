@@ -15,8 +15,7 @@ module.exports = ((sequelize, DataTypes) => {
         provider_id: {
             type: Sequelize.TEXT,
             allowNull: false,
-        },
-
+        }
     }, {
         timestamps: true,
         paranoid: true,
