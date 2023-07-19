@@ -270,9 +270,20 @@ function showRecord(u_id) {
         };
         // 모든 비동기 작업이 완료되면 결과를 resolve로 반환
         console.log(result)
+    
+        return models.message.findOne({
+            where:{
+                id: 1
+            }
+        });
+      })
+      .then(res =>{
+        result["messages"] = {
+            "message" : res.dataValues["message"]
+        }
         var successObj = Object.assign({}, message['200_OK'])
         successObj.record = result
-        return resolve(result)
+        return resolve(successObj)
       })
       .catch(error => {
         console.log(error);

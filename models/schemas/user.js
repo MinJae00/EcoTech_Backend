@@ -5,7 +5,7 @@ module.exports = ((sequelize, DataTypes) => {
 
     var schema = sequelize.define('user', {
         user_id: {
-            type: Sequelize.INTEGER,
+            type: Sequelize.TEXT,
             allowNull: false,
         },
         metro: {
@@ -21,7 +21,6 @@ module.exports = ((sequelize, DataTypes) => {
             type: Sequelize.INTEGER,
             allowNUll: false,
         },
-        
         car_habit: {
             type: Sequelize.INTEGER,
             allowNull : false,
