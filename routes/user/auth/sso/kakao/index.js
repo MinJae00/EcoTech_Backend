@@ -7,7 +7,7 @@ const userController = require('../../../../../controllers/user')
 if (process.env.NODE_ENV == 'development' || process.env.NODE_ENV == '') {
     passport.use('kakao', new KakaoStrategy({
         clientID: process.env.KAKAO_ID,
-        callbackURL: '/user/auth/sso/kakao/callback',     // 위에서 설정한 Redirect URI
+        callbackURL: 'http://localhost:3036/user/auth/sso/kakao/callback',     // 위에서 설정한 Redirect URI
     }, async (accessToken, refreshToken, profile, done) => {
         //console.log(profile);
         console.log("accessToken : ", accessToken);
@@ -22,7 +22,7 @@ if (process.env.NODE_ENV == 'development' || process.env.NODE_ENV == '') {
         failureRedirect: '/',
     }), (res, req) => {
 
-        //res.redirect('/auth');
+        res.redirect('/auth');
     });
 
     router.get('/profile', userController.getKakaoUserInfo)
