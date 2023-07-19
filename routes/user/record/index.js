@@ -3,6 +3,6 @@ const message = require('../../../utils/message')
 
 const recordController = require('../../../controllers/eco_result')
 
-router.get('/', recordController.user_record)
+router.post('/', recordController.user_record)
 
 module.exports = router
