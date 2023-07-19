@@ -12,7 +12,7 @@ function user_record(req,res,next){
     if (req.body.aircond == null) return res.send(message['404_NOT_FOUND'])
 
 
-    resultCalModule.calculate(req.body.user_id,req.body.flug,req.body.food,req.body.car,req.body.aircond).then(response => {
+    resultCalModule.calculate(req.body.user_id,req.body.flug,req.body.food,req.body.car,req.body.aircond,req.body.garbage).then(response => {
         
         return res.status(response.status).send(response)
       }).catch(error => {

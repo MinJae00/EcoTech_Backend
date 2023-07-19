@@ -9,45 +9,46 @@ module.exports = ((sequelize, DataTypes) => {
             allowNull: false,
         },
         e_sum_m: {
-            type: Sequelize.DECIMAL(10, 2),
+            type: Sequelize.INTEGER,
             allowNull: true,
         },
         e_sum_e: {
-            type: Sequelize.DECIMAL(10, 2),
+            type: Sequelize.DOUBLE,
             allowNull: true,
         },
         e_sum_c: {
-            type: Sequelize.DECIMAL(10, 2),
+            type: Sequelize.DOUBLE,
             allowNull: true,
         },
         f_sum_c: {
-            type: Sequelize.DECIMAL(10, 2),
+            type: Sequelize.DOUBLE,
             allowNull: true,
         },
         c_sum_m: {
-            type: Sequelize.DECIMAL(10, 2),
+            type: Sequelize.INTEGER,
             allowNull: true,
         },
         c_sum_e: {
-            type: Sequelize.DECIMAL(10, 2),
+            type: Sequelize.DOUBLE,
             allowNull: true,
         },
         c_sum_c: {
-            type: Sequelize.DECIMAL(10, 2),
+            type: Sequelize.DOUBLE,
             allowNull: true,
         },
         a_sum_m: {
-            type: Sequelize.DECIMAL(10, 2),
+            type: Sequelize.INTEGER,
             allowNull: true,
         },
         a_sum_e: {
-            type: Sequelize.DECIMAL(10, 2),
+            type: Sequelize.DOUBLE,
             allowNull: true,
         },
         a_sum_c: {
-            type: Sequelize.DECIMAL(10, 2),
+            type: Sequelize.DOUBLE,
             allowNull: true,
         },
+
 
     }, {
         timestamps: false,

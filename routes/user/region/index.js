@@ -3,6 +3,6 @@ const message = require('../../../utils/message')
 
 const recordController = require('../../../controllers/user')
 
-router.get('/', recordController.select_region_up)
+router.post('/', recordController.select_region_up)
 
 module.exports = router

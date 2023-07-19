@@ -9,15 +9,15 @@ module.exports = ((sequelize, DataTypes) => {
             allowNull: true,
         },
         electronic: {
-            type: Sequelize.DECIMAL(10, 2),
+            type: Sequelize.DOUBLE,
             allowNull: true,
         },
         co2: {
-            type: Sequelize.DECIMAL(10, 2),
+            type: Sequelize.DOUBLE,
             allowNull: true,
         },
         money: {
-            type: Sequelize.DECIMAL(10, 2),
+            type: Sequelize.INTEGER,
             allowNull: true,
         },
         save_check: {

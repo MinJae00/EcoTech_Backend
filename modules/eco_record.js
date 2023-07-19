@@ -4,7 +4,7 @@ const models = require('../models');
 const message = require('../utils/message');
 
 
-function calculate(u_id, _flug, _food, _car, _aircond) {
+function calculate(u_id, _flug, _food, _car, _aircond,_garbage) {
     const findAccumPromise = models.accum.findOne({
         where: {
             user_id: u_id
@@ -31,18 +31,26 @@ function calculate(u_id, _flug, _food, _car, _aircond) {
             const houseCnt = userResult.dataValues['house_cnt'];
             const powerUsage = userResult.dataValues['power_usage'];
             // 기존 업데이트 코드는 이전과 동일
-            const onedayElectronic = (_flug * (powerUsage * 0.11)/30) + (_aircond * (powerUsage * 0.1)/30);
-            const onedayCo2 = (_flug * 36.5) + (_food * 99.17) + (_car * 42.6) + (_aircond * 7.26);
-            const onedayMoney = (_flug * (powerUsage * 214.6 * 0.11)/30) + (_aircond * (powerUsage * 214.6) * 0.1)/30 + (_car * 4794);
+            if(_aircond >= userResult.aircond_habit + 2){ 
+                var _air_cond = 1;
+            }
+            else{
+                var _air_cond = 0;
+            }
+            console.log(_air_cond)
+            const onedayElectronic = (_flug * (powerUsage * 0.11)/30) + (_air_cond * (powerUsage * 0.1)/30);
+            const onedayCo2 = (_flug * 36.5) + (_food * 99.17) + (_car * 42.6) + (_air_cond * 7.26);
+            const onedayMoney = (_flug * (powerUsage * 214.6 * 0.11)/30) + (_air_cond * (powerUsage * 214.6) * 0.1)/30 + (_car * 4794);
+            
+            console.log(onedayElectronic)
+            console.log(onedayCo2)
+            console.log(onedayMoney)
             
             const updatedElectronic_accum = accumResult.dataValues['electronic'] + onedayElectronic
             const updatedCo2_accum = accumResult.dataValues['co2'] + onedayCo2;
             const updatedMoney_accum = accumResult.dataValues['money'] + onedayMoney;
-            const updated_save_user = userResult.dataValues['user_id'];
 
-            console.log(onedayElectronic)
-            console.log(onedayCo2)
-            console.log(onedayMoney)
+            
 
             console.log(updatedElectronic_accum)
             console.log(updatedCo2_accum)
@@ -69,7 +77,8 @@ function calculate(u_id, _flug, _food, _car, _aircond) {
                         throw new Error("No matching user_id found in the item table.");
                     }
                     // itemResult에서 필요한 값 추출 및 연산 수행
-                    
+                    console.log("Asdfasdfadsf")
+                    console.log(_air_cond)
                     const updated_e_sum_m = itemResult.dataValues['e_sum_m'] + (_flug * (powerUsage * 214.6 * 0.11)/30);
                     const updated_e_sum_e = itemResult.dataValues['e_sum_e'] + (_flug * (powerUsage * 0.11)/30);
                     const updated_e_sum_c = itemResult.dataValues['e_sum_c'] + (_flug * 36.5);
@@ -79,9 +88,9 @@ function calculate(u_id, _flug, _food, _car, _aircond) {
                     const updated_c_sum_m = itemResult.dataValues['c_sum_m'] + (_car * 4794);
                     const updated_c_sum_c = itemResult.dataValues['c_sum_c'] + (_car * 42.6);
 
-                    const updated_a_sum_m = itemResult.dataValues['a_sum_m'] + (_aircond * (powerUsage * 214.6 * 0.11)/30);
-                    const updated_a_sum_e = itemResult.dataValues['a_sum_e'] + (_aircond * (powerUsage * 0.11))/30;
-                    const updated_a_sum_c = itemResult.dataValues['a_sum_c'] + (_aircond * 7.26);
+                    const updated_a_sum_m = itemResult.dataValues['a_sum_m'] + (_air_cond * (powerUsage * 214.6 * 0.11)/30);
+                    const updated_a_sum_e = itemResult.dataValues['a_sum_e'] + (_air_cond * (powerUsage * 0.11))/30;
+                    const updated_a_sum_c = itemResult.dataValues['a_sum_c'] + (_air_cond * 7.26);
 
                     // item 테이블 업데이트
                     const updatedAccumValues_item = {
@@ -118,7 +127,7 @@ function calculate(u_id, _flug, _food, _car, _aircond) {
                     const updatedElectronic_month = monthResult.dataValues['electronic'] + onedayElectronic;
                     const updatedCo2_month = monthResult.dataValues['co2'] + onedayCo2;
                     const updatedMoney_month = monthResult.dataValues['money'] + onedayMoney;
-
+                    
                     // month 테이블 업데이트
                     const updatedAccumValues_month = {
                         electronic: updatedElectronic_month,
