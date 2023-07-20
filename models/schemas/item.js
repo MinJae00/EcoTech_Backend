@@ -28,10 +28,7 @@ module.exports = ((sequelize, DataTypes) => {
             type: Sequelize.INTEGER,
             allowNull: true,
         },
-        c_sum_e: {
-            type: Sequelize.DOUBLE,
-            allowNull: true,
-        },
+    
         c_sum_c: {
             type: Sequelize.DOUBLE,
             allowNull: true,
@@ -48,6 +45,10 @@ module.exports = ((sequelize, DataTypes) => {
             type: Sequelize.DOUBLE,
             allowNull: true,
         },
+        g_sum_c:{
+            type: Sequelize.INTEGER,
+            allowNull: true
+        }
 
 
     }, {

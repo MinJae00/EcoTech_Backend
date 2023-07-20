@@ -3,6 +3,6 @@ const message = require('../../../utils/message')
 
 const userController = require('../../../controllers/user')
 
-router.get('/', userController.user_info)
+router.post('/', userController.user_info)
 
 module.exports = router

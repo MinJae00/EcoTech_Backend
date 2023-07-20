@@ -16,6 +16,8 @@ function calculate(u_id, _flug, _food, _car, _aircond,_garbage) {
             user_id: u_id
         }
     });
+    
+
 
     // 두 개의 비동기 작업을 병렬로 실행
     return Promise.all([findAccumPromise, findUserPromise])
@@ -26,11 +28,17 @@ function calculate(u_id, _flug, _food, _car, _aircond,_garbage) {
             if (!userResult) {
                 throw new Error("No matching user_id found in the user table.");
             }
+            _flug = parseInt(_flug, 10);
+            _food = parseInt(_food, 10);
+            _car = parseInt(_car, 10);
+            _aircond = parseInt(_aircond, 10);
+            _garbage = parseInt(_garbage, 10);
 
             // userResult에서 houseCnt 값을 추출
             const houseCnt = userResult.dataValues['house_cnt'];
             const powerUsage = userResult.dataValues['power_usage'];
             // 기존 업데이트 코드는 이전과 동일
+            aircond_habit = parseInt(userResult.aircond_habit, 10);
             if(_aircond >= userResult.aircond_habit + 2){ 
                 var _air_cond = 1;
             }
@@ -39,7 +47,7 @@ function calculate(u_id, _flug, _food, _car, _aircond,_garbage) {
             }
             console.log(_air_cond)
             const onedayElectronic = (_flug * (powerUsage * 0.11)/30) + (_air_cond * (powerUsage * 0.1)/30);
-            const onedayCo2 = (_flug * 36.5) + (_food * 99.17) + (_car * 42.6) + (_air_cond * 7.26);
+            const onedayCo2 = (_flug * 36.5) + (_food * 99.17) + (_car * 42.6) + (_air_cond * 7.26) + (_garbage * 244);
             const onedayMoney = (_flug * (powerUsage * 214.6 * 0.11)/30) + (_air_cond * (powerUsage * 214.6) * 0.1)/30 + (_car * 4794);
             
             console.log(onedayElectronic)
@@ -77,8 +85,6 @@ function calculate(u_id, _flug, _food, _car, _aircond,_garbage) {
                         throw new Error("No matching user_id found in the item table.");
                     }
                     // itemResult에서 필요한 값 추출 및 연산 수행
-                    console.log("Asdfasdfadsf")
-                    console.log(_air_cond)
                     const updated_e_sum_m = itemResult.dataValues['e_sum_m'] + (_flug * (powerUsage * 214.6 * 0.11)/30);
                     const updated_e_sum_e = itemResult.dataValues['e_sum_e'] + (_flug * (powerUsage * 0.11)/30);
                     const updated_e_sum_c = itemResult.dataValues['e_sum_c'] + (_flug * 36.5);
@@ -87,6 +93,8 @@ function calculate(u_id, _flug, _food, _car, _aircond,_garbage) {
 
                     const updated_c_sum_m = itemResult.dataValues['c_sum_m'] + (_car * 4794);
                     const updated_c_sum_c = itemResult.dataValues['c_sum_c'] + (_car * 42.6);
+
+                    const updated_g_sum_c = itemResult.dataValues['g_sum_c'] + (_garbage * 244);
 
                     const updated_a_sum_m = itemResult.dataValues['a_sum_m'] + (_air_cond * (powerUsage * 214.6 * 0.11)/30);
                     const updated_a_sum_e = itemResult.dataValues['a_sum_e'] + (_air_cond * (powerUsage * 0.11))/30;
@@ -105,7 +113,9 @@ function calculate(u_id, _flug, _food, _car, _aircond,_garbage) {
 
                         a_sum_m : updated_a_sum_m,
                         a_sum_e : updated_a_sum_e,
-                        a_sum_c : updated_a_sum_c
+                        a_sum_c : updated_a_sum_c,
+
+                        g_sum_c : updated_g_sum_c
                     };
 
                     return itemResult.update(updatedAccumValues_item)
@@ -127,7 +137,7 @@ function calculate(u_id, _flug, _food, _car, _aircond,_garbage) {
                     const updatedElectronic_month = monthResult.dataValues['electronic'] + onedayElectronic;
                     const updatedCo2_month = monthResult.dataValues['co2'] + onedayCo2;
                     const updatedMoney_month = monthResult.dataValues['money'] + onedayMoney;
-                    
+
                     // month 테이블 업데이트
                     const updatedAccumValues_month = {
                         electronic: updatedElectronic_month,
@@ -211,24 +221,37 @@ function showAccum(u_id){
     })
 }
 
-function showItem(u_id){
-
+function showItem(u_id) {
     return new Promise((resolve, reject) => {
         models.item.findOne({
             where: {
                 user_id: u_id
             }
         }).then(response => {
-            if (response != null){
+            if (response != null) {
                 var successObj = Object.assign({}, message['200_OK'])
-                successObj.item = response.dataValues
-                return resolve(successObj)
-            }
+                successObj.item = response.dataValues;
 
-            else{
+                // Fetch car_habit from the user table using user_id
+                models.user.findOne({
+                    where: {
+                        user_id: u_id
+                    }
+                }).then(userResponse => {
+                    if (userResponse != null) {
+                        successObj.car_habit = userResponse.dataValues["car_habit"];
+                        return resolve(successObj);
+                    } else {
+                        return reject(message['404_NOT_FOUND']);
+                    }
+                }).catch(error => {
+                    console.log(error)
+                    return reject(message['500_INTERNAL_SERVER_ERROR'])
+                });
 
+            } else {
                 return reject(message['404_NOT_FOUND'])
-            } 
+            }
         }).catch(error => {
             console.log(error)
             return reject(message['500_INTERNAL_SERVER_ERROR'])
@@ -303,28 +326,50 @@ function showRecord(u_id) {
   }
 
 
-function save_check(u_id){
-
+  function save_check(u_id) {
     return new Promise((resolve, reject) => {
         models.today.findOne({
             where: {
                 user_id: u_id
             }
         }).then(response => {
-            if (response != null){
+            if (response != null) {
                 var successObj = Object.assign({}, message['200_OK'])
                 successObj.save_check = response.dataValues["save_check"]
-                return resolve(successObj)
-            }
-            else{
+
+                // Fetch car_habit from the user table using user_id
+                models.user.findOne({
+                    where: {
+                        user_id: u_id
+                    }
+                }).then(userResponse => {
+                    if (userResponse != null) {
+                        successObj.car_habit = userResponse.dataValues["car_habit"];
+                        return resolve(successObj);
+                    } else {
+                        return reject(message['404_NOT_FOUND']);
+                    }
+                }).catch(error => {
+                    console.log(error)
+                    return reject(message['500_INTERNAL_SERVER_ERROR'])
+                });
+
+            } else {
                 return reject(message['404_NOT_FOUND'])
-            } 
+            }
         }).catch(error => {
             console.log(error)
             return reject(message['500_INTERNAL_SERVER_ERROR'])
         })
     })
 }
+
+
+
+
+
+
+
 
 
 
