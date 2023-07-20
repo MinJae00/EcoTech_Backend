@@ -54,6 +54,7 @@ function user_info(req,res,next){
   if (req.body.city == null) return res.send(message['404_NOT_FOUND'])
   if (req.body.car_habit == null) return res.send(message['404_NOT_FOUND'])
   if (req.body.nickname == null) return res.send(message['404_NOT_FOUND'])
+
   userModule.user_info_create(req.body.user_id, req.body.metro, req.body.city, req.body.air_habit, req.body.car_habit, req.body.nickname, req.body.age).then(response => {
     return res.status(response.status).send(response)
   }).catch(error => {
@@ -81,10 +82,25 @@ function select_region_up(req,res,next){
 })
 }
 
+function already(req,res,next){ 
+  if (req.body.user_id == null)return res.send(message['404_NOT_FOUND'])
+  
+  userModule.alreadyExist(req.body.user_id).then(response => {
+    return res.status(response.status).send(response)
+  }).catch(error => {
+    
+    if (error.status == null){
+      return res.status(message['500_INTERNAL_SERVER_ERROR'].status).send(message['500_INTERNAL_SERVER_ERROR'])
+    }
+    else return res.status(error.status).send(error)
+})
+}
+
 
 module.exports = {
   getKakaoUserInfo,
   doKakaoSignIn,
   user_info,
   select_region_up,
+  already
 }

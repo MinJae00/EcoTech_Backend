@@ -189,13 +189,37 @@ async function user_info_create(u_id, _metro, _city, _aircond, _car_habit, _nick
     }
 }
 
+function alreadyExist(u_id){
+    return new Promise((resolve, reject) => {
+        models.user.findOne({
+            where: {
+                user_id: u_id
+            }
+        }).then(response => {
+            if (response != null){
+                var successObj = Object.assign({}, message['200_OK'])
+                successObj.user_id = response.dataValues["user_id"]
+                return resolve(successObj)
+            }
 
+            else{
+                var successObj = Object.assign({}, message['200_OK'])
+                successObj.user_id = "존재하지 않습니다."
+                return resolve(successObj)
+            } 
+        }).catch(error => {
+            console.log(error)
+            return reject(message['500_INTERNAL_SERVER_ERROR'])
+        })
+    })
+}
 
 module.exports = {
     doSSOSignIn,
     doSSOSignUp,
     user_info_create,
     issueJWT,
-    select_region_up
+    select_region_up,
+    alreadyExist
 
 }
