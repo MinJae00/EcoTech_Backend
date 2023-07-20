@@ -174,7 +174,8 @@ async function user_info_create(u_id, _metro, _city, _aircond, _car_habit, _nick
                 c_sum_c: 0,
                 a_sum_m: 0,
                 a_sum_e: 0,
-                a_sum_c: 0
+                a_sum_c: 0,
+                g_sum_c: 0,
             })
         ];
 
