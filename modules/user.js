@@ -99,13 +99,10 @@ async function select_region_up(_sido,_code){
 
 async function user_info_create(u_id, _metro, _city, _aircond, _car_habit, _nickname, _age) {
     const apiKey = 'f26y7B9iRE5El0nbEXmxUc4aV4w40F2sPOwbyxNa';
-
     const apiUrl = `https://bigdata.kepco.co.kr/openapi/v1/commonCode.do?codeTy=cityCd&apiKey=f26y7B9iRE5El0nbEXmxUc4aV4w40F2sPOwbyxNa&returnType=json`;
-    
 
     try {
         const response = await axios.get(apiUrl);
-
         const data = response.data.data;
 
         const filteredData = data.filter(item => item.uppoCdNm === _metro && item.codeNm === _city);
@@ -113,57 +110,50 @@ async function user_info_create(u_id, _metro, _city, _aircond, _car_habit, _nick
         const uppoCdArray = filteredData.map(item => item.uppoCd);
         const codeArray = filteredData.map(item => item.code);
 
-        const apiUrl2 = `https://bigdata.kepco.co.kr/openapi/v1/powerUsage/houseAve.do?year=2020&month=11&metroCd=${uppoCdArray}&cityCd=${codeArray}&apiKey=${apiKey}&returnType=json`
+        const apiUrl2 = `https://bigdata.kepco.co.kr/openapi/v1/powerUsage/houseAve.do?year=2020&month=11&metroCd=${uppoCdArray}&cityCd=${codeArray}&apiKey=${apiKey}&returnType=json`;
 
-        const response2 = await axios.get(apiUrl2)
-
+        const response2 = await axios.get(apiUrl2);
         const houseCnt = response2.data.data[0].houseCnt;
         const powerUsage = response2.data.data[0].powerUsage;
 
-        // 여기서 houseCnt 값을 이용하여 추가 작업을 수행하고, models.user.create() 등 다른 작업을 진행합니다.
-        // models.user.create()로 user 테이블 생성
-        
         const uppoCd = uppoCdArray[0]; // 첫 번째 요소를 추출하여 단일 값으로 사용
-        const code = codeArray[0]; // 첫 번째 요소를 추출하여 단일 값으로 사용 
-             
-        const userResponse = await models.user.create({
-            user_id: u_id,
-            metro: uppoCd,
-            city: code,
-            aircond_habit : _aircond,
-            car_habit: _car_habit,
-            house_cnt: houseCnt,
-            power_usage: powerUsage,
-            nickname: _nickname,
-            age: _age
+        const code = codeArray[0]; // 첫 번째 요소를 추출하여 단일 값으로 사용
+
+        // user_id를 기준으로 user 테이블을 찾아봄
+        const existingUser = await models.user.findOne({
+            where: {
+                user_id: u_id
+            }
         });
 
-        if (!userResponse) {
-            throw new Error("Failed to create user in the user table.");
-        }
+        if (existingUser) {
+            // 기존 레코드가 존재할 경우, 해당 레코드를 업데이트
+            await existingUser.update({
+                metro: uppoCd,
+                city: code,
+                aircond_habit: _aircond,
+                car_habit: _car_habit,
+                house_cnt: houseCnt,
+                power_usage: powerUsage,
+                nickname: _nickname,
+                age: _age
+            });
+        } else {
+            // 기존 레코드가 존재하지 않을 경우, 새로운 레코드를 생성
+            await models.user.create({
+                user_id: u_id,
+                metro: uppoCd,
+                city: code,
+                aircond_habit: _aircond,
+                car_habit: _car_habit,
+                house_cnt: houseCnt,
+                power_usage: powerUsage,
+                nickname: _nickname,
+                age: _age
+            });
 
-        // userResponse를 사용하여 다른 테이블들을 생성하는 비동기 작업 병렬로 실행
-        const promises = [
-            models.accum.create({
-                user_id: u_id,
-                electronic: 0,
-                co2: 0,
-                money: 0
-            }),
-            models.dal.create({
-                user_id: u_id,
-                electronic: 0,
-                co2: 0,
-                money: 0
-            }),
-            models.today.create({
-                user_id: u_id,
-                electronic: 0,
-                co2: 0,
-                money: 0,
-                save_check: 0
-            }),
-            models.item.create({
+            // 새로운 회원일 때만 item, today, dal, accum 테이블 생성
+            await models.item.create({
                 user_id: u_id,
                 e_sum_m: 0,
                 e_sum_e: 0,
@@ -176,16 +166,35 @@ async function user_info_create(u_id, _metro, _city, _aircond, _car_habit, _nick
                 a_sum_e: 0,
                 a_sum_c: 0,
                 g_sum_c: 0,
-            })
-        ];
+            });
 
-        await Promise.all(promises);
+            await models.today.create({
+                user_id: u_id,
+                electronic: 0,
+                co2: 0,
+                money: 0,
+                save_check: 0
+            });
+
+            await models.dal.create({
+                user_id: u_id,
+                electronic: 0,
+                co2: 0,
+                money: 0
+            });
+
+            await models.accum.create({
+                user_id: u_id,
+                electronic: 0,
+                co2: 0,
+                money: 0
+            });
+        }
 
         // 모든 작업이 성공적으로 완료되었을 때 결과 반환
         return message['200_OK'];
     } catch (error) {
         // 오류 발생 시 에러 메시지 반환
-        
         return message['500_INTERNAL_SERVER_ERROR'];
     }
 }
