@@ -225,12 +225,32 @@ function alreadyExist(u_id){
     })
 }
 
+function mypage(u_id){
+    return new Promise((resolve, reject) => {
+        models.user.findOne({
+            where: {
+                user_id: u_id
+            }
+        }).then(response => {
+            if (response != null){
+                var successObj = Object.assign({}, message['200_OK'])
+                successObj.level = response.dataValues["level"]
+                return resolve(successObj)
+            }
+        }).catch(error => {
+            console.log(error)
+            return reject(message['500_INTERNAL_SERVER_ERROR'])
+        })
+    })
+}
+
 module.exports = {
     doSSOSignIn,
     doSSOSignUp,
     user_info_create,
     issueJWT,
     select_region_up,
-    alreadyExist
+    alreadyExist,
+    mypage
 
 }

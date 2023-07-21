@@ -190,6 +190,7 @@ function calculate(u_id, _flug, _food, _car, _aircond,_garbage) {
                 })
                 
             }).then((res) =>{
+                lev = res.dataValues["level"]
                 if (res.dataValues["level"] == 1 && Co2_accum >= 6013.42 && Co2_accum < 15033.55){
                     lv = {
                         "level" : 2
@@ -224,6 +225,7 @@ function calculate(u_id, _flug, _food, _car, _aircond,_garbage) {
                     
                     var successObj = Object.assign({}, message['200_OK'])
                     successObj.message = "레벨 업 했습니다."
+                    successObj.level = lev + 1
                     console.log(successObj)
 
                     return (successObj)
