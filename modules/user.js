@@ -149,7 +149,8 @@ async function user_info_create(u_id, _metro, _city, _aircond, _car_habit, _nick
                 house_cnt: houseCnt,
                 power_usage: powerUsage,
                 nickname: _nickname,
-                age: _age
+                age: _age,
+                level: 1
             });
 
             // 새로운 회원일 때만 item, today, dal, accum 테이블 생성

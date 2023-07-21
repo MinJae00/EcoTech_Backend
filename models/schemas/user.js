@@ -40,6 +40,10 @@ module.exports = ((sequelize, DataTypes) => {
         age: {
             type: Sequelize.INTEGER,
             allowNull : true
+        },
+        level: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
         }
 
     }, {

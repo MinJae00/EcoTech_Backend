@@ -22,17 +22,20 @@ function calculate(u_id, _flug, _food, _car, _aircond,_garbage) {
     // 두 개의 비동기 작업을 병렬로 실행
     return Promise.all([findAccumPromise, findUserPromise])
         .then(([accumResult, userResult]) => {
+
             if (!accumResult) {
                 throw new Error("No matching user_id found in the accum table.");
             }
             if (!userResult) {
                 throw new Error("No matching user_id found in the user table.");
             }
+
             _flug = parseInt(_flug, 10);
             _food = parseInt(_food, 10);
             _car = parseInt(_car, 10);
             _aircond = parseInt(_aircond, 10);
             _garbage = parseInt(_garbage, 10);
+            up = 0;
 
             // userResult에서 houseCnt 값을 추출
             const houseCnt = userResult.dataValues['house_cnt'];
@@ -58,7 +61,7 @@ function calculate(u_id, _flug, _food, _car, _aircond,_garbage) {
             const updatedCo2_accum = accumResult.dataValues['co2'] + onedayCo2;
             const updatedMoney_accum = accumResult.dataValues['money'] + onedayMoney;
 
-            
+            Co2_accum = accumResult.dataValues['co2'] + onedayCo2;
 
             console.log(updatedElectronic_accum)
             console.log(updatedCo2_accum)
@@ -187,10 +190,50 @@ function calculate(u_id, _flug, _food, _car, _aircond,_garbage) {
                 })
                 
             }).then((res) =>{
+                if (res.dataValues["level"] == 1 && Co2_accum >= 6013.42 && Co2_accum < 15033.55){
+                    lv = {
+                        "level" : 2
+                    }
+                    up = 1
+                }
+                else if (res.dataValues["level"] == 2 && Co2_accum >= 15033.55 && Co2_accum < 24053.68){
+                    lv = {
+                        "level" : 3
+                    }
+                    up = 1
+                }
 
-                return message['200_OK']
+                else if (res.dataValues["level"] == 3 && Co2_accum >= 24053.68){
+                    lv = {
+                        "level" : 4
+                    }
+                    up = 1
+                }
+                else { 
+                    lv = {
+                        "level" : res.dataValues["level"]
+                    }
+                }
+
+
+                return res.update(lv)
             })
-                
+            .then(() =>{
+                if (up == 1){
+                    console.log("asdf")
+                    
+                    var successObj = Object.assign({}, message['200_OK'])
+                    successObj.message = "레벨 업 했습니다."
+                    console.log(successObj)
+
+                    return (successObj)
+                }
+                else{
+                    return message['200_OK']
+                }
+
+            })
+            
             .catch((error) => {
                     // 오류 발생 시 reject
                     return error.message;
