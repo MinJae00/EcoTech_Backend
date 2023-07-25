@@ -5,6 +5,7 @@ const crypto = require('crypto')
 const axios = require('axios');
 
 
+
 function issueJWT(user) {
     return new Promise((resolve, reject) => {
         crypto.sign(user).then(response => {
@@ -244,6 +245,8 @@ function mypage(u_id){
     })
 }
 
+
+
 module.exports = {
     doSSOSignIn,
     doSSOSignUp,
@@ -251,6 +254,6 @@ module.exports = {
     issueJWT,
     select_region_up,
     alreadyExist,
-    mypage
+    mypage,
 
 }

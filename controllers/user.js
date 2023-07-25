@@ -117,5 +117,6 @@ module.exports = {
   user_info,
   select_region_up,
   already,
-  myPage
+  myPage,
+
 }

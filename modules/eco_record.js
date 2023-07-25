@@ -42,7 +42,7 @@ function calculate(u_id, _flug, _food, _car, _aircond,_garbage) {
             const powerUsage = userResult.dataValues['power_usage'];
             // 기존 업데이트 코드는 이전과 동일
             aircond_habit = parseInt(userResult.aircond_habit, 10);
-            if(_aircond >= userResult.aircond_habit + 2){ 
+            if(_aircond >= userResult.aircond_habit + 1){ 
                 var _air_cond = 1;
             }
             else{

@@ -8,5 +8,4 @@ module.exports = {
     "500_INTERNAL_SERVER_ERROR": { "status": 500, "message": "INTERNAL_SERVER_ERROR" },
     "503_SSO_SERVER_ERROR": { "status": 503, "message": "SSO_SERVER_ERROR" },
     "411_NOT_USER" : { "status" : 411, "message" : "not already user"}
-
 }
